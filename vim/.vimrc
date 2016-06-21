@@ -7,8 +7,6 @@ map <leader>e :NERDTreeToggle<CR>
 map <leader>u :UndotreeToggle<CR>
 " save session (windows/buffers). Open with vim -S
 nnoremap <leader>s :mksession<CR>
-" open ag.vim
-nnoremap <leader>a :Ag
 " Send current selected text to interpreter.
 map <leader>n :SlimuxREPLSendLine<CR>
 " Opens CtrlP
