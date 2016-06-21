@@ -28,3 +28,6 @@
 [submodule "vim/.vim/bundle/vimerl"]
 	path = vim/.vim/bundle/vimerl
 	url = https://github.com/jimenezrick/vimerl
+[submodule "vim/.vim/bundle/vim-airline-themes"]
+	path = vim/.vim/bundle/vim-airline-themes
+	url = https://github.com/vim-airline/vim-airline-themes
