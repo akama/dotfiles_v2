@@ -1,0 +1,30 @@
+[submodule "vim/.vim/bundle/colorschemes"]
+	path = vim/.vim/bundle/colorschemes
+	url = https://github.com/flazz/vim-colorschemes.git
+[submodule "vim/.vim/bundle/ctrlp.vim"]
+	path = vim/.vim/bundle/ctrlp.vim
+	url = https://github.com/kien/ctrlp.vim.git
+[submodule "vim/.vim/bundle/nerdcommenter"]
+	path = vim/.vim/bundle/nerdcommenter
+	url = https://github.com/scrooloose/nerdcommenter
+[submodule "vim/.vim/bundle/nerdtree"]
+	path = vim/.vim/bundle/nerdtree
+	url = https://github.com/scrooloose/nerdtree.git
+[submodule "vim/.vim/bundle/slimux"]
+	path = vim/.vim/bundle/slimux
+	url = https://github.com/epeli/slimux.git
+[submodule "vim/.vim/bundle/undotree"]
+	path = vim/.vim/bundle/undotree
+	url = https://github.com/mbbill/undotree
+[submodule "vim/.vim/bundle/vim-airline"]
+	path = vim/.vim/bundle/vim-airline
+	url = https://github.com/bling/vim-airline
+[submodule "vim/.vim/bundle/vim-fugitive"]
+	path = vim/.vim/bundle/vim-fugitive
+	url = https://github.com/tpope/vim-fugitive
+[submodule "vim/.vim/bundle/vim-sensible"]
+	path = vim/.vim/bundle/vim-sensible
+	url = git://github.com/tpope/vim-sensible.git
+[submodule "vim/.vim/bundle/vimerl"]
+	path = vim/.vim/bundle/vimerl
+	url = https://github.com/jimenezrick/vimerl
