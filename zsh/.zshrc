@@ -15,6 +15,10 @@ alias http="python -m SimpleHTTPServer"
 alias hs="cat ~/.zsh_history | grep "
 alias expose="~/Code/Expose/expose.sh"
 
+# Tmux alias
+alias tma='tmux attach -d -t'
+alias git-tmux='tmux new -s $(basename $(pwd))'
+
 # Set to this to use case-sensitive completion
 # CASE_SENSITIVE="true"
 
@@ -48,33 +52,11 @@ plugins=(git rails ruby python)
 
 source $ZSH/oh-my-zsh.sh
 
-# Customize to your needs...
-export PATH=/usr/local/bin:$PATH:/usr/bin:/bin:/usr/sbin:/sbin:/Users/adam/golang/bin:/Users/adam/anaconda/bin:/usr/local/texlive/2013/bin/x86_64-darwin/
-
 #Plugins and stuff
 plugins=(zsh-syntax-highlighting)
 
-# Tmux alias
-alias tma='tmux attach -d -t'
-alias git-tmux='tmux new -s $(basename $(pwd))'
+# check if we have anything local we need to source
+if [ -f ~/.zshrc_local ]; then
+    source ~/.zshrc_local
+fi
 
-# virtualwrapper
-source /usr/local/bin/virtualenvwrapper.sh
-
-### Added by the Heroku Toolbelt
-export PATH="/usr/local/heroku/bin:$PATH"
-
-# Add support for powerline
-. /usr/local/lib/python2.7/site-packages/powerline/bindings/zsh/powerline.zsh
-export PATH="/usr/local/sbin:$PATH"
-
-#docker machine things
-export DOCKER_TLS_VERIFY="1"
-export DOCKER_HOST="tcp://192.168.99.100:2376"
-export DOCKER_CERT_PATH="/Users/adam/.docker/machine/machines/dev"
-export DOCKER_MACHINE_NAME="dev"
-
-# go stuff
-export GOPATH=$HOME/golang
-export PATH=$PATH:$GOPATH/bin
-ulimit -n 8096
