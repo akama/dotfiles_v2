@@ -46,6 +46,10 @@ set wildignore+=*/tmp/*,*.so,*.swp,*.zip
 " }}}
 
 " PLUGIN SETTINGS {{{
+" Let airline use powerline fonts 
+let g:airline_powerline_fonts = 1
+" The airline theme
+let g:airline_theme='bubblegum'
 " Have NERDTree ignore some file types
 let NERDTreeIgnore = ['\.pyc$']
 " CtrlP ignore some directories
