@@ -11,6 +11,8 @@ nnoremap <leader>s :mksession<CR>
 map <leader>n :SlimuxREPLSendLine<CR>
 " Opens CtrlP
 map <leader>p :CtrlP<CR>
+" Opens ack.vim
+map <leader>a :Ack!<Space>
 " }}}
 
 " UNDO {{{
@@ -54,6 +56,10 @@ let g:airline_theme='bubblegum'
 let NERDTreeIgnore = ['\.pyc$']
 " CtrlP ignore some directories
 let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)$'
+" Tell Ack.vim to use ag
+if executable('ag')
+        let g:ackprg = 'ag --vimgrep --smart-case'
+endif
 " }}}
 
 " TABS & SPACES {{{
