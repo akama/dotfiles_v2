@@ -14,6 +14,7 @@ ZSH_THEME="bira"
 alias http="python -m SimpleHTTPServer"
 alias hs="cat ~/.zsh_history | grep "
 alias expose="~/Code/Expose/expose.sh"
+alias g="git"
 
 # Tmux alias
 alias tma='tmux attach -d -t'
@@ -59,4 +60,3 @@ plugins=(zsh-syntax-highlighting)
 if [ -f ~/.zshrc_local ]; then
     source ~/.zshrc_local
 fi
-
