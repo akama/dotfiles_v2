@@ -24,7 +24,7 @@ set undoreload=10000 "maximum number lines to save for undo on a buffer reload
 
 " BASIC SETTINGS {{{
 " Load pathogen plugin system
-execute pathogen#infect() 
+execute pathogen#infect()
 " Turn on auto indenting
 filetype plugin indent on
 " enable sytax processing
@@ -37,25 +37,25 @@ set number
 set cursorline
 " display the list of autocomplete for command menu
 set wildmenu
-" highlight matching parentheses/braces/brackets 
+" highlight matching parentheses/braces/brackets
 set showmatch
 " Check the final line in a file for a modeline
 set modelines=1
 " Color Scheme
-colorscheme pyte
+" colorscheme pyte
 " Ignore files in wildcard search
 set wildignore+=*/tmp/*,*.so,*.swp,*.zip
 " }}}
 
 " PLUGIN SETTINGS {{{
-" Let airline use powerline fonts 
+" Let airline use powerline fonts
 let g:airline_powerline_fonts = 1
 " The airline theme
 let g:airline_theme='bubblegum'
 " Have NERDTree ignore some file types
 let NERDTreeIgnore = ['\.pyc$']
 " CtrlP ignore some directories
-let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)$'
+let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn|build|opam)$'
 " Tell Ack.vim to use ag
 if executable('ag')
         let g:ackprg = 'ag --vimgrep --smart-case'
@@ -64,9 +64,9 @@ endif
 
 " TABS & SPACES {{{
 " set the visual spaces per tab
-set tabstop=4
+set tabstop=2
 " number of spaces in tab when editing
-set softtabstop=4
+set softtabstop=2
 " tabs are spaces
 set expandtab
 " }}}
@@ -122,7 +122,7 @@ set writebackup
 " location for the backup files to be stored
 set backupdir=~/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
 " any file in these folders won't be backed up
-set backupskip=/tmp/*,/private/tmp/* 
+set backupskip=/tmp/*,/private/tmp/*
 " Folders to save the swap file to
 set directory=~/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
 " }}}
