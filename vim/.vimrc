@@ -13,6 +13,9 @@ map <leader>n :SlimuxREPLSendLine<CR>
 map <leader>p :CtrlP<CR>
 " Opens ack.vim
 map <leader>a :Ack!<Space>
+" Merlin Find Function
+map <leader>f :MerlinLocate<CR>
+map <leader>t :MerlinTypeOf<CR>
 " }}}
 
 " UNDO {{{
@@ -67,6 +70,7 @@ endif
 set tabstop=2
 " number of spaces in tab when editing
 set softtabstop=2
+set shiftwidth=2
 " tabs are spaces
 set expandtab
 " }}}
@@ -84,7 +88,7 @@ nnoremap <leader><space> :nohlsearch<CR>
 " enable folding
 set foldenable
 " open most folds by default
-set foldlevelstart=10
+set foldlevelstart=0
 " fold based on indent level
 set foldmethod=indent
 " }}}
