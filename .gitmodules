@@ -1,36 +1,21 @@
-[submodule "vim/.vim/bundle/colorschemes"]
-	path = vim/.vim/bundle/colorschemes
-	url = https://github.com/flazz/vim-colorschemes.git
-[submodule "vim/.vim/bundle/ctrlp.vim"]
-	path = vim/.vim/bundle/ctrlp.vim
-	url = https://github.com/kien/ctrlp.vim.git
-[submodule "vim/.vim/bundle/nerdcommenter"]
-	path = vim/.vim/bundle/nerdcommenter
-	url = https://github.com/scrooloose/nerdcommenter
-[submodule "vim/.vim/bundle/nerdtree"]
-	path = vim/.vim/bundle/nerdtree
-	url = https://github.com/scrooloose/nerdtree.git
-[submodule "vim/.vim/bundle/slimux"]
-	path = vim/.vim/bundle/slimux
-	url = https://github.com/epeli/slimux.git
-[submodule "vim/.vim/bundle/undotree"]
-	path = vim/.vim/bundle/undotree
-	url = https://github.com/mbbill/undotree
-[submodule "vim/.vim/bundle/vim-airline"]
-	path = vim/.vim/bundle/vim-airline
-	url = https://github.com/bling/vim-airline
-[submodule "vim/.vim/bundle/vim-fugitive"]
-	path = vim/.vim/bundle/vim-fugitive
-	url = https://github.com/tpope/vim-fugitive
-[submodule "vim/.vim/bundle/vim-sensible"]
-	path = vim/.vim/bundle/vim-sensible
-	url = git://github.com/tpope/vim-sensible.git
-[submodule "vim/.vim/bundle/vimerl"]
-	path = vim/.vim/bundle/vimerl
-	url = https://github.com/jimenezrick/vimerl
-[submodule "vim/.vim/bundle/vim-airline-themes"]
-	path = vim/.vim/bundle/vim-airline-themes
-	url = https://github.com/vim-airline/vim-airline-themes
-[submodule "vim/.vim/bundle/ack.vim"]
-	path = vim/.vim/bundle/ack.vim
-	url = https://github.com/mileszs/ack.vim.git
+[submodule "vim/.vim/pack/vendor/start/ale"]
+	path = vim/.vim/pack/vendor/start/ale
+	url = https://github.com/dense-analysis/ale.git
+[submodule "vim/.vim/pack/vendor/start/bufkill"]
+	path = vim/.vim/pack/vendor/start/bufkill
+	url = https://github.com/qpkorr/vim-bufkill.git
+[submodule "vim/.vim/pack/vendor/start/fzf.vim"]
+	path = vim/.vim/pack/vendor/start/fzf.vim
+	url = https://github.com/junegunn/fzf.vim.git
+[submodule "vim/.vim/pack/vendor/start/nerdcommenter"]
+	path = vim/.vim/pack/vendor/start/nerdcommenter
+	url = https://github.com/preservim/nerdcommenter.git
+[submodule "vim/.vim/pack/vendor/start/nerdtree"]
+	path = vim/.vim/pack/vendor/start/nerdtree
+	url = https://github.com/preservim/nerdtree.git
+[submodule "vim/.vim/pack/vendor/start/nord"]
+	path = vim/.vim/pack/vendor/start/nord
+	url = https://github.com/arcticicestudio/nord-vim.git
+[submodule "vim/.vim/pack/vendor/start/undotree"]
+	path = vim/.vim/pack/vendor/start/undotree
+	url = https://github.com/mbbill/undotree.git
