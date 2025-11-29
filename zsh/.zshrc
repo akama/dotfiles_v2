@@ -62,3 +62,8 @@ plugins=(zsh-syntax-highlighting)
 if [ -f ~/.zshrc_local ]; then
     source ~/.zshrc_local
 fi
+
+# check if we have anything local we need to source
+if [ -d ~/bin/ ]; then
+    PATH="$HOME/bin/:$PATH"
+fi
