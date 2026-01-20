@@ -40,8 +40,12 @@ colorscheme nord
 " }}}
 
 " FZF {{{
-" Add fzf ff installed using Homebrew
-set rtp+=/usr/local/opt/fzf
+" Add fzf if installed using Homebrew.
+if isdirectory('/opt/homebrew/opt/fzf')
+  set rtp+=/opt/homebrew/opt/fzf
+elseif isdirectory('/usr/local/opt/fzf')
+  set rtp+=/usr/local/opt/fzf
+endif
 " Turn off highlights in ale
 let g:ale_set_highlights = 0
 " }}}
