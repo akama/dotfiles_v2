@@ -5,6 +5,8 @@ let mapleader = "\<Space>"
 map <leader>e :NERDTreeToggle<CR>
 " Open undotree with leader-u
 map <leader>u :UndotreeToggle<CR>
+" Run Ag with Ctrl-g
+nnoremap <C-g> :Ag<CR>
 " }}}
 
 " UNDO {{{
