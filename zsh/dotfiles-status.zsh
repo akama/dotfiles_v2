@@ -78,11 +78,11 @@ dotfiles_status_notice() {
     ahead="${ahead:-0}"
 
     if [ "$behind" -gt 0 ] && [ "$ahead" -gt 0 ]; then
-      __dotfiles_status_add "diverged (behind $behind / ahead $ahead)"
+      __dotfiles_status_add "diverged $behind/$ahead"
     elif [ "$behind" -gt 0 ]; then
-      __dotfiles_status_add "behind $behind -> pull"
+      __dotfiles_status_add "behind $behind"
     elif [ "$ahead" -gt 0 ]; then
-      __dotfiles_status_add "ahead $ahead -> push"
+      __dotfiles_status_add "ahead $ahead"
     fi
   fi
 
