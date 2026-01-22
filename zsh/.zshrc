@@ -67,3 +67,11 @@ fi
 if [ -d ~/bin/ ]; then
     PATH="$HOME/bin/:$PATH"
 fi
+
+# Dotfiles status notice on shell startup.
+if [ -z "${DOTFILES_DIR:-}" ]; then
+    DOTFILES_DIR="$HOME/dotfiles"
+fi
+if [ -f "$DOTFILES_DIR/zsh/dotfiles-status.zsh" ]; then
+    source "$DOTFILES_DIR/zsh/dotfiles-status.zsh"
+fi
