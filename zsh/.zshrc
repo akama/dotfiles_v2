@@ -26,6 +26,18 @@ alias g="git"
 alias tma='tmux attach -d -t'
 alias git-tmux='tmux new -s $(basename $(pwd))'
 
+# Functions
+make-proj() {
+    if [ -z "$1" ]; then
+        echo "Usage: make-proj <name>"
+        return 1
+    fi
+    mkdir -p "$HOME/projects"
+    local project_path="$HOME/projects/$(date +%Y_%m)_$1"
+    mkdir -p "$project_path"
+    cd "$project_path"
+}
+
 # Local overrides
 if [ -f ~/.zshrc_local ]; then
     source ~/.zshrc_local
