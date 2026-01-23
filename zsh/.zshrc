@@ -38,6 +38,11 @@ if [ -f ~/.zsh/plugins/zsh-histdb/sqlite-history.zsh ]; then
 fi
 
 # Aliases
+if [[ "$(uname)" == "Darwin" ]]; then
+    alias ls="ls -G"
+else
+    alias ls="ls --color=auto"
+fi
 alias http="python -m SimpleHTTPServer"
 alias hs="cat ~/.zsh_history | grep "
 alias expose="~/Code/Expose/expose.sh"
