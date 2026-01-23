@@ -1,6 +1,11 @@
 # Dotfiles directory
 : "${DOTFILES_DIR:=$HOME/dotfiles}"
 
+# Shell options
+setopt AUTO_CD              # cd by typing directory name
+setopt CORRECT              # suggest corrections for typos
+typeset -U path             # deduplicate PATH entries
+
 # Prompt: path, with hostname if SSH session
 _is_ssh() {
     [[ -n "$SSH_CLIENT" || -n "$SSH_TTY" ]] && return 0
@@ -28,6 +33,8 @@ HISTSIZE=10000
 SAVEHIST=10000
 setopt EXTENDED_HISTORY
 setopt HIST_IGNORE_DUPS
+setopt HIST_IGNORE_SPACE
+setopt HIST_REDUCE_BLANKS
 setopt INC_APPEND_HISTORY
 
 # History (zsh-histdb)
@@ -43,9 +50,13 @@ if [[ "$(uname)" == "Darwin" ]]; then
 else
     alias ls="ls --color=auto"
 fi
-alias http="python -m SimpleHTTPServer"
-alias hs="cat ~/.zsh_history | grep "
-alias expose="~/Code/Expose/expose.sh"
+alias ll="ls -la"
+alias la="ls -A"
+alias ..="cd .."
+alias ...="cd ../.."
+alias md="mkdir -p"
+alias http="python3 -m http.server"
+alias hs="histdb"
 alias g="git"
 alias tma='tmux attach -d -t'
 alias git-tmux='tmux new -s $(basename $(pwd))'

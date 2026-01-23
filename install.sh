@@ -21,6 +21,13 @@ if [ -n "$missing" ]; then
 fi
 echo "All dependencies found."
 
+echo "Initializing git submodules..."
+git -C "$DOTFILES_DIR" submodule update --init --recursive
+
+echo "Creating required directories..."
+mkdir -p ~/.vim/undodir
+mkdir -p ~/.vim-tmp
+
 echo "Installing dotfiles from $DOTFILES_DIR"
 
 for dir in "$DOTFILES_DIR"/*/; do

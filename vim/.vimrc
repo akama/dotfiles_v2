@@ -5,8 +5,8 @@ let mapleader = "\<Space>"
 map <leader>e :NERDTreeToggle<CR>
 " Open undotree with leader-u
 map <leader>u :UndotreeToggle<CR>
-" Run Ag with Ctrl-g
-map <leader> :Ag<CR>
+" Run Ag with leader-g
+map <leader>g :Ag<CR>
 " Open fzf files with leader-f
 map <leader>f :Files<CR>
 " Open fzf buffers with leader-b
@@ -61,16 +61,19 @@ autocmd BufWinEnter *.* silent loadview
 " }}}
 
 " FZF {{{
-" Add fzf if installed using Homebrew.
+" Add fzf if installed using Homebrew
 if isdirectory('/opt/homebrew/opt/fzf')
   set rtp+=/opt/homebrew/opt/fzf
 elseif isdirectory('/usr/local/opt/fzf')
   set rtp+=/usr/local/opt/fzf
-endif
-
 " Add fzf if installed using Ports
-if isdirectory('/opt/local/share/fzf/vim')
+elseif isdirectory('/opt/local/share/fzf/vim')
   set rtp+=/opt/local/share/fzf/vim
+" Add fzf if installed on Linux
+elseif isdirectory('/usr/share/doc/fzf/examples')
+  set rtp+=/usr/share/doc/fzf/examples
+elseif isdirectory('/usr/share/fzf')
+  set rtp+=/usr/share/fzf
 endif
 
 " Turn off highlights in ale
