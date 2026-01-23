@@ -36,10 +36,13 @@ if [ -d ~/bin/ ]; then
     PATH="$HOME/bin/:$PATH"
 fi
 
-# Dotfiles status notice on shell startup
-if [ -z "${DOTFILES_DIR:-}" ]; then
-    DOTFILES_DIR="$HOME/dotfiles"
+# Add ~/.tools to PATH
+if [ -d ~/.tools ]; then
+    PATH="$HOME/.tools:$PATH"
 fi
-if [ -f "$DOTFILES_DIR/zsh/dotfiles-status.zsh" ]; then
-    source "$DOTFILES_DIR/zsh/dotfiles-status.zsh"
+
+# Dotfiles status notice on shell startup
+: "${DOTFILES_DIR:=$HOME/dotfiles}"
+if [ -f ~/.tools/dotfiles-status.zsh ]; then
+    source ~/.tools/dotfiles-status.zsh
 fi
