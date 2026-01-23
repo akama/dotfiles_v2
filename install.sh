@@ -4,7 +4,7 @@ set -e
 
 DOTFILES_DIR="$(cd "$(dirname "$0")" && pwd)"
 SKIP_DIRS=".git"
-DEPENDENCIES="sqlite3 tmux vim git tar make fzf"
+DEPENDENCIES="sqlite3 tmux vim git tar make fzf jj"
 
 echo "Checking dependencies..."
 missing=""

@@ -77,6 +77,11 @@ make-proj() {
     cd "$project_path"
 }
 
+# jj workspace management
+if [ -f ~/.zsh/jj-trees.zsh ]; then
+    source ~/.zsh/jj-trees.zsh
+fi
+
 # Local overrides
 if [ -f ~/.zshrc_local ]; then
     source ~/.zshrc_local
