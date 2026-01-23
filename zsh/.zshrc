@@ -44,6 +44,10 @@ if [ -f ~/.zsh/plugins/zsh-histdb/sqlite-history.zsh ]; then
     bindkey '^r' _histdb-isearch
 fi
 
+# Up/down search history by prefix
+bindkey "^[[A" history-beginning-search-backward
+bindkey "^[[B" history-beginning-search-forward
+
 # Aliases
 if [[ "$(uname)" == "Darwin" ]]; then
     alias ls="ls -G"
