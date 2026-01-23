@@ -6,7 +6,11 @@ map <leader>e :NERDTreeToggle<CR>
 " Open undotree with leader-u
 map <leader>u :UndotreeToggle<CR>
 " Run Ag with Ctrl-g
-nnoremap <C-g> :Ag<CR>
+map <leader> :Ag<CR>
+" Open fzf files with leader-f
+map <leader>f :Files<CR>
+" Open fzf buffers with leader-b
+map <leader>b :Buffers<CR>
 " }}}
 
 " UNDO {{{
@@ -39,6 +43,21 @@ set backspace=indent,eol,start
 
 " Set colorscheme to nord
 colorscheme nord
+
+"ignore case in searching 
+set ignorecase
+
+"if mixed case in search then don't ignore it 
+set smartcase
+
+"scrolling begins at 5th line from top or bottom  
+set scrolloff=5
+
+"Saves the position of screen at exit 
+autocmd BufWinLeave *.* mkview
+
+"Restores screen last position 
+autocmd BufWinEnter *.* silent loadview
 " }}}
 
 " FZF {{{
@@ -48,6 +67,12 @@ if isdirectory('/opt/homebrew/opt/fzf')
 elseif isdirectory('/usr/local/opt/fzf')
   set rtp+=/usr/local/opt/fzf
 endif
+
+" Add fzf if installed using Ports
+if isdirectory('/opt/local/share/fzf/vim')
+  set rtp+=/opt/local/share/fzf/vim
+endif
+
 " Turn off highlights in ale
 let g:ale_set_highlights = 0
 " }}}
