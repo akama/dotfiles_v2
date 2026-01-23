@@ -4,6 +4,22 @@ set -e
 
 DOTFILES_DIR="$(cd "$(dirname "$0")" && pwd)"
 SKIP_DIRS=".git"
+DEPENDENCIES="sqlite3 tmux vim git tar make fzf"
+
+echo "Checking dependencies..."
+missing=""
+for dep in $DEPENDENCIES; do
+    if ! command -v "$dep" &>/dev/null; then
+        missing="$missing $dep"
+    fi
+done
+
+if [ -n "$missing" ]; then
+    echo "Missing dependencies:$missing"
+    echo "Install them with your package manager before continuing."
+    exit 1
+fi
+echo "All dependencies found."
 
 echo "Installing dotfiles from $DOTFILES_DIR"
 

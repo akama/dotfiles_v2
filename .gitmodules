@@ -19,3 +19,6 @@
 [submodule "vim/.vim/pack/vendor/start/undotree"]
 	path = vim/.vim/pack/vendor/start/undotree
 	url = https://github.com/mbbill/undotree.git
+[submodule "zsh/.zsh/plugins/zsh-histdb"]
+	path = zsh/.zsh/plugins/zsh-histdb
+	url = https://github.com/larkery/zsh-histdb

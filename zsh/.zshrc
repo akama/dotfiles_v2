@@ -1,3 +1,6 @@
+# Dotfiles directory
+: "${DOTFILES_DIR:=$HOME/dotfiles}"
+
 # Prompt: path, with hostname if SSH session
 _is_ssh() {
     [[ -n "$SSH_CLIENT" || -n "$SSH_TTY" ]] && return 0
@@ -17,6 +20,22 @@ unset -f _is_ssh
 
 # Completions
 autoload -Uz compinit && compinit
+autoload -Uz add-zsh-hook
+
+# History
+HISTFILE=~/.zsh_history
+HISTSIZE=10000
+SAVEHIST=10000
+setopt EXTENDED_HISTORY
+setopt HIST_IGNORE_DUPS
+setopt INC_APPEND_HISTORY
+
+# History (zsh-histdb)
+if [ -f ~/.zsh/plugins/zsh-histdb/sqlite-history.zsh ]; then
+    source ~/.zsh/plugins/zsh-histdb/sqlite-history.zsh
+    source ~/.zsh/plugins/zsh-histdb/histdb-interactive.zsh
+    bindkey '^r' _histdb-isearch
+fi
 
 # Aliases
 alias http="python -m SimpleHTTPServer"
@@ -54,7 +73,6 @@ if [ -d ~/.tools ]; then
 fi
 
 # Dotfiles status notice on shell startup
-: "${DOTFILES_DIR:=$HOME/dotfiles}"
 if [ -f ~/.tools/dotfiles-status.zsh ]; then
     source ~/.tools/dotfiles-status.zsh
 fi
