@@ -24,16 +24,62 @@ repo-clone() {
 }
 
 tree-new() {
-    if [ -z "$1" ] || [ -z "$2" ]; then
-        echo "Usage: tree-new <repo> <name> [base-rev]"
+    local repo=""
+    local name=""
+    local base_rev=""
+
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            -r|--rev|--revision)
+                if [ -z "$2" ]; then
+                    echo "Missing revision for $1"
+                    return 1
+                fi
+                base_rev="$2"
+                shift 2
+                ;;
+            -h|--help)
+                echo "Usage: tree-new <repo> <name> [-r <base-rev>]"
+                echo "  repo: name of repo in ~/repos/"
+                echo "  name: name for the tree/branch"
+                echo "  -r, --rev: revision to branch from (default: trunk())"
+                echo "  example: tree-new myrepo feature -r 'main~3'"
+                return 0
+                ;;
+            --)
+                shift
+                break
+                ;;
+            -*)
+                echo "Unknown option: $1"
+                return 1
+                ;;
+            *)
+                if [ -z "$repo" ]; then
+                    repo="$1"
+                elif [ -z "$name" ]; then
+                    name="$1"
+                elif [ -z "$base_rev" ]; then
+                    base_rev="$1"
+                else
+                    echo "Unexpected argument: $1"
+                    return 1
+                fi
+                shift
+                ;;
+        esac
+    done
+
+    if [ -z "$repo" ] || [ -z "$name" ]; then
+        echo "Usage: tree-new <repo> <name> [-r <base-rev>]"
         echo "  repo: name of repo in ~/repos/"
         echo "  name: name for the tree/branch"
-        echo "  base-rev: revision to branch from (default: trunk())"
+        echo "  -r, --rev: revision to branch from (default: trunk())"
+        echo "  example: tree-new myrepo feature -r 'main~3'"
         return 1
     fi
-    local repo="$1"
-    local name="$2"
-    local base_rev="${3:-trunk()}"
+
+    local base_rev="${base_rev:-trunk()}"
     local repo_path="$REPOS_DIR/$repo"
     local tree_name="$repo-$name"
     local tree_path="$TREES_DIR/$tree_name"
@@ -53,8 +99,8 @@ tree-new() {
     # Create workspace at base revision
     jj -R "$repo_path" workspace add "$tree_path" --name "$tree_name" -r "$base_rev"
 
-    # Create new change and bookmark
-    jj -R "$tree_path" new -m "$name"
+    # Name the working-copy change and create a bookmark
+    jj -R "$tree_path" describe -m "$name"
     jj -R "$tree_path" bookmark create "$name"
 
     # Create and attach to tmux session
