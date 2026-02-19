@@ -4,7 +4,15 @@ set -e
 
 DOTFILES_DIR="$(cd "$(dirname "$0")" && pwd)"
 SKIP_DIRS=".git"
-DEPENDENCIES="sqlite3 tmux vim git tar make fzf jj"
+DEPENDENCIES="zsh sqlite3 tmux vim git tar make fzf jj"
+
+echo "Checking that current shell is zsh..."
+if [ "$SHELL" != "$(command -v zsh)" ]; then
+    echo "Current shell is $SHELL, but zsh is required."
+    echo "Run 'chsh -s \$(which zsh)' to set zsh as your default shell."
+    exit 1
+fi
+echo "Shell is zsh."
 
 echo "Checking dependencies..."
 missing=""
