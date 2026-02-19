@@ -9,7 +9,7 @@ DEPENDENCIES="zsh sqlite3 tmux vim git tar make fzf jj"
 echo "Checking that current shell is zsh..."
 if [ "$SHELL" != "$(command -v zsh)" ]; then
     echo "Current shell is $SHELL, but zsh is required."
-    echo "Run 'chsh -s \$(which zsh)' to set zsh as your default shell."
+    echo "Run 'sudo usermod -s /usr/bin/zsh \$USER' to set zsh as your default shell."
     exit 1
 fi
 echo "Shell is zsh."
