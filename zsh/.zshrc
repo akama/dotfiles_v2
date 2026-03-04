@@ -77,6 +77,39 @@ make-proj() {
     cd "$project_path"
 }
 
+port-check() {
+    if [ -z "$1" ]; then
+        echo "Usage: port-check <port>"
+        return 1
+    fi
+    if [[ "$(uname)" == "Darwin" ]]; then
+        lsof -nP -iTCP:"$1" -sTCP:LISTEN
+    else
+        ss -tlnp "sport = :$1"
+    fi
+}
+
+proj() {
+    local dirs=()
+    for base in ~/projects ~/repos ~/trees; do
+        [ -d "$base" ] || continue
+        for d in "$base"/*(N/); do
+            dirs+=("${d#$HOME/}")
+        done
+    done
+    if [ ${#dirs[@]} -eq 0 ]; then
+        echo "No directories found in ~/projects, ~/repos, or ~/trees"
+        return 1
+    fi
+    local choice
+    choice="$(printf '%s\n' "${dirs[@]}" | fzf --prompt="proj> " --query="${1:-}")" || return 0
+    if [[ "$choice" == trees/* ]]; then
+        tree-open "${choice#trees/}"
+    else
+        cd "$HOME/$choice"
+    fi
+}
+
 # jj workspace management
 if [ -f ~/.zsh/jj-trees.zsh ]; then
     source ~/.zsh/jj-trees.zsh
