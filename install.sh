@@ -4,7 +4,7 @@ set -e
 
 DOTFILES_DIR="$(cd "$(dirname "$0")" && pwd)"
 SKIP_DIRS=".git"
-DEPENDENCIES="zsh sqlite3 tmux vim git tar make fzf jj"
+DEPENDENCIES="zsh sqlite3 tmux vim git tar make fzf jj age"
 
 echo "Checking that current shell is zsh..."
 if [ "$SHELL" != "$(command -v zsh)" ]; then
@@ -38,6 +38,9 @@ mkdir -p ~/.vim-tmp
 
 echo "Installing dotfiles from $DOTFILES_DIR"
 
+# Source secrets.sh for sync_secret and helpers
+source "$DOTFILES_DIR/secrets.sh" --source-only 2>/dev/null || true
+
 for dir in "$DOTFILES_DIR"/*/; do
     dirname="$(basename "$dir")"
 
@@ -51,18 +54,27 @@ for dir in "$DOTFILES_DIR"/*/; do
         [[ ! -e "$item" ]] && continue
 
         name="$(basename "$item")"
-        target="$HOME/$name"
 
-        if [[ -L "$target" ]]; then
-            echo "Removing existing symlink: $target"
-            rm "$target"
-        elif [[ -e "$target" ]]; then
-            echo "Backing up existing file: $target -> $target.backup"
-            mv "$target" "$target.backup"
+        if [[ "$name" == *.age ]]; then
+            # Decrypt instead of symlink
+            plain_name="${name%.age}"
+            target="$HOME/$plain_name"
+            rel_path="${item#$DOTFILES_DIR/}"
+            sync_secret "$item" "$target" "$rel_path" || true
+        else
+            target="$HOME/$name"
+
+            if [[ -L "$target" ]]; then
+                echo "Removing existing symlink: $target"
+                rm "$target"
+            elif [[ -e "$target" ]]; then
+                echo "Backing up existing file: $target -> $target.backup"
+                mv "$target" "$target.backup"
+            fi
+
+            echo "Linking: $target -> $item"
+            ln -s "$item" "$target"
         fi
-
-        echo "Linking: $target -> $item"
-        ln -s "$item" "$target"
     done
 done
 
