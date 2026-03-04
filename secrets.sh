@@ -163,9 +163,9 @@ find_age_files() {
 
         while IFS= read -r -d '' age_file; do
             local rel_path="${age_file#$DOTFILES_DIR/}"
-            local plain_name
-            plain_name="$(basename "${age_file%.age}")"
-            local target="$HOME/$plain_name"
+            # Strip category prefix (e.g. "ssh/" from "ssh/.ssh/config.age")
+            local within_category="${rel_path#*/}"
+            local target="$HOME/${within_category%.age}"
             echo "$age_file"$'\t'"$target"$'\t'"$rel_path"
         done < <(find "$dir" -name '*.age' -print0 2>/dev/null)
     done
@@ -369,6 +369,58 @@ cmd_remove_key() {
     echo "Done. Remember to commit .age-recipients and any updated .age files."
 }
 
+cmd_edit() {
+    local age_rel_path="$1"
+
+    if [[ -z "$age_rel_path" ]]; then
+        echo "Usage: secrets.sh edit <age-path>" >&2
+        echo "Example: ./secrets.sh edit ssh/.ssh/config.age" >&2
+        return 1
+    fi
+
+    # Ensure .age suffix
+    if [[ "$age_rel_path" != *.age ]]; then
+        age_rel_path="${age_rel_path}.age"
+    fi
+
+    local age_file="$DOTFILES_DIR/$age_rel_path"
+    if [[ ! -f "$age_file" ]]; then
+        echo "Error: $age_file not found" >&2
+        return 1
+    fi
+
+    local tmp
+    tmp="$(mktemp)"
+    trap "rm -f '$tmp'" RETURN
+
+    if ! decrypt_age_to_stdout "$age_file" > "$tmp"; then
+        echo "Error: failed to decrypt $age_file" >&2
+        return 1
+    fi
+
+    local before_hash
+    before_hash="$(hash_content < "$tmp")"
+
+    "${EDITOR:-vim}" "$tmp"
+
+    local after_hash
+    after_hash="$(hash_content < "$tmp")"
+
+    if [[ "$before_hash" == "$after_hash" ]]; then
+        echo "No changes made."
+        return 0
+    fi
+
+    encrypt_to_age "$tmp" "$age_file"
+
+    # Update sync hash so install doesn't see a conflict
+    local hash_file
+    hash_file="$(hash_file_path "$age_rel_path")"
+    store_hash "$hash_file" "$after_hash"
+
+    echo "Encrypted updated content -> $age_rel_path"
+}
+
 cmd_encrypt() {
     local source_file="$1"
     local age_rel_path="$2"
@@ -419,6 +471,9 @@ case "${1:-decrypt}" in
     diff)
         cmd_diff
         ;;
+    edit)
+        cmd_edit "$2"
+        ;;
     encrypt)
         cmd_encrypt "$2" "$3"
         ;;
@@ -436,6 +491,7 @@ case "${1:-decrypt}" in
         echo "" >&2
         echo "  decrypt              Sync all .age files (default)" >&2
         echo "  diff                 Show diffs between repo and local secrets" >&2
+        echo "  edit <age-path>      Decrypt to \$EDITOR, re-encrypt on save" >&2
         echo "  encrypt <f> <path>   Encrypt local file to .age path in repo" >&2
         echo "  add-key [key|file]   Add SSH public key to recipients (default: local key)" >&2
         echo "  remove-key <pattern> Remove matching key from recipients" >&2

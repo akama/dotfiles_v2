@@ -41,6 +41,44 @@ echo "Installing dotfiles from $DOTFILES_DIR"
 # Source secrets.sh for sync_secret and helpers
 source "$DOTFILES_DIR/secrets.sh" --source-only 2>/dev/null || true
 
+# Recursively install contents of a dotfiles dir into an existing real directory.
+# e.g. install_into_existing_dir /root/dotfiles/ssh/.ssh /root/.ssh ssh
+install_into_existing_dir() {
+    local src_dir="$1"
+    local target_dir="$2"
+    local category="$3"
+
+    for item in "$src_dir"/* "$src_dir"/.*; do
+        local name
+        name="$(basename "$item")"
+        [[ "$name" == "." || "$name" == ".." ]] && continue
+        [[ ! -e "$item" ]] && continue
+
+        local target="$target_dir/$name"
+
+        if [[ "$name" == *.age ]]; then
+            local plain_name="${name%.age}"
+            local plain_target="$target_dir/$plain_name"
+            local rel_path="${item#$DOTFILES_DIR/}"
+            sync_secret "$item" "$plain_target" "$rel_path" || true
+        elif [[ -d "$item" && -d "$target" && ! -L "$target" ]]; then
+            # Recurse into nested real directories
+            install_into_existing_dir "$item" "$target" "$category"
+        else
+            if [[ -L "$target" ]]; then
+                echo "Removing existing symlink: $target"
+                rm "$target"
+            elif [[ -e "$target" ]]; then
+                echo "Backing up existing file: $target -> $target.backup"
+                mv "$target" "$target.backup"
+            fi
+
+            echo "Linking: $target -> $item"
+            ln -s "$item" "$target"
+        fi
+    done
+}
+
 for dir in "$DOTFILES_DIR"/*/; do
     dirname="$(basename "$dir")"
 
@@ -61,6 +99,9 @@ for dir in "$DOTFILES_DIR"/*/; do
             target="$HOME/$plain_name"
             rel_path="${item#$DOTFILES_DIR/}"
             sync_secret "$item" "$target" "$rel_path" || true
+        elif [[ -d "$item" && -d "$HOME/$name" && ! -L "$HOME/$name" ]]; then
+            # Target is a real directory — recurse into it instead of symlinking
+            install_into_existing_dir "$item" "$HOME/$name" "$dirname"
         else
             target="$HOME/$name"
 
