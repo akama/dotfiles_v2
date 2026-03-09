@@ -115,6 +115,11 @@ if [ -f ~/.zsh/jj-trees.zsh ]; then
     source ~/.zsh/jj-trees.zsh
 fi
 
+# PR status dashboard
+if [ -f ~/.zsh/pr-status.zsh ]; then
+    source ~/.zsh/pr-status.zsh
+fi
+
 # Local overrides
 if [ -f ~/.zshrc_local ]; then
     source ~/.zshrc_local
