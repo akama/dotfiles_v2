@@ -164,6 +164,86 @@ tree-list() {
     done
 }
 
+tree-find() {
+    local repo=""
+    local search=""
+
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            -h|--help)
+                echo "Usage: tree-find <repo> <search-string>"
+                echo "  repo: name of repo in ~/repos/"
+                echo "  search: substring to match in commit descriptions"
+                return 0
+                ;;
+            *)
+                if [ -z "$repo" ]; then
+                    repo="$1"
+                elif [ -z "$search" ]; then
+                    search="$1"
+                else
+                    echo "Unexpected argument: $1"
+                    return 1
+                fi
+                shift
+                ;;
+        esac
+    done
+
+    if [ -z "$repo" ] || [ -z "$search" ]; then
+        echo "Usage: tree-find <repo> <search-string>"
+        return 1
+    fi
+
+    local repo_path="$REPOS_DIR/$repo"
+    if [ ! -d "$repo_path" ]; then
+        echo "Repo not found: $repo_path"
+        return 1
+    fi
+
+    # Get all workspaces (skip default)
+    local workspaces=()
+    while IFS= read -r line; do
+        local ws_name="${line%%:*}"
+        [ "$ws_name" = "default" ] && continue
+        workspaces+=("$ws_name")
+    done < <(jj -R "$repo_path" workspace list 2>/dev/null)
+
+    if [ ${#workspaces[@]} -eq 0 ]; then
+        echo "No workspaces found in $repo"
+        return 1
+    fi
+
+    # For each workspace, check if any matching commit is in its stack
+    local matching_trees=()
+    local found
+    for ws in "${workspaces[@]}"; do
+        found=$(jj -R "$repo_path" log --no-graph --limit 1 \
+            -r "description(substring:\"$search\") & ((trunk()..\"$ws\"@) | descendants(\"$ws\"@))" \
+            -T 'change_id' 2>/dev/null)
+        if [ -n "$found" ]; then
+            matching_trees+=("$ws")
+        fi
+    done
+
+    if [ ${#matching_trees[@]} -eq 0 ]; then
+        echo "No workspace found containing commits matching: $search"
+        return 1
+    fi
+
+    local target
+    if [ ${#matching_trees[@]} -eq 1 ]; then
+        target="${matching_trees[1]}"
+    else
+        target=$(printf '%s\n' "${matching_trees[@]}" | fzf --prompt="Select workspace: ")
+        if [ -z "$target" ]; then
+            return 1
+        fi
+    fi
+
+    tree-open "$target"
+}
+
 tree-rm() {
     if [ -z "$1" ]; then
         echo "Usage: tree-rm <name>"
