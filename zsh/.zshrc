@@ -115,6 +115,11 @@ if [ -f ~/.zsh/jj-trees.zsh ]; then
     source ~/.zsh/jj-trees.zsh
 fi
 
+# gh helper for jj workspaces
+if [ -f ~/.zsh/gh-jj.zsh ]; then
+    source ~/.zsh/gh-jj.zsh
+fi
+
 # PR status dashboard
 if [ -f ~/.zsh/pr-status.zsh ]; then
     source ~/.zsh/pr-status.zsh

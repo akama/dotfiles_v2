@@ -30,7 +30,7 @@ pr-status() {
 
     local author="${PR_STATUS_AUTHOR:-}"
     if [[ -z "$author" ]]; then
-        author="$(command env -u GITHUB_TOKEN gh api user --jq .login 2>/dev/null)"
+        author="$(_gh api user --jq .login 2>/dev/null)"
         if [[ -z "$author" ]]; then
             echo "pr-status: could not determine GitHub username" >&2
             return 1
@@ -38,7 +38,7 @@ pr-status() {
     fi
 
     local json err
-    json="$(command env -u GITHUB_TOKEN gh pr list -A "$author" --json number,title,headRefName,baseRefName,isDraft,reviewRequests,latestReviews,statusCheckRollup,state --limit 50 2>&1)" || {
+    json="$(_gh pr list -A "$author" --json number,title,headRefName,baseRefName,isDraft,reviewRequests,latestReviews,statusCheckRollup,state --limit 50 2>&1)" || {
         echo "pr-status: gh pr list failed: $json" >&2
         return 1
     }

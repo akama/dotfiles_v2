@@ -31,7 +31,7 @@ pr-reviews() {
 
     # Fetch PR metadata, reviews, and comments in one call
     local json
-    json="$(command env -u GITHUB_TOKEN gh pr view "$pr_number" --json title,state,author,reviews,comments,reviewRequests 2>&1)" || {
+    json="$(_gh pr view "$pr_number" --json title,state,author,reviews,comments,reviewRequests 2>&1)" || {
         echo "pr-reviews: failed to fetch PR #${pr_number}: $json" >&2
         return 1
     }
@@ -154,7 +154,7 @@ pr-reviews() {
 
     # Inline review threads via GraphQL (gives us isResolved)
     local repo owner repo_name
-    repo="$(command env -u GITHUB_TOKEN gh repo view --json nameWithOwner --jq .nameWithOwner 2>/dev/null)"
+    repo="$(_gh_repo)"
     if [[ -n "$repo" ]]; then
         owner="${repo%%/*}"
         repo_name="${repo#*/}"
