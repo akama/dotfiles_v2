@@ -119,6 +119,9 @@ fi
 if [ -f ~/.zsh/pr-status.zsh ]; then
     source ~/.zsh/pr-status.zsh
 fi
+if [ -f ~/.zsh/pr-reviews.zsh ]; then
+    source ~/.zsh/pr-reviews.zsh
+fi
 
 # Local overrides
 if [ -f ~/.zshrc_local ]; then
