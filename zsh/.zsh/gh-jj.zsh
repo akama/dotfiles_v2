@@ -26,8 +26,12 @@ _gh() {
     case "$1" in
         pr|issue|release|repo)
             local repo
-            repo="$(_gh_repo)" || { echo "_gh: not in a git or jj repo" >&2; return 1; }
-            command env -u GITHUB_TOKEN gh "$@" -R "$repo"
+            repo="$(_gh_repo)"
+            if [[ -n "$repo" ]]; then
+                command env -u GITHUB_TOKEN gh "$@" -R "$repo"
+            else
+                command env -u GITHUB_TOKEN gh "$@"
+            fi
             ;;
         *)
             command env -u GITHUB_TOKEN gh "$@"

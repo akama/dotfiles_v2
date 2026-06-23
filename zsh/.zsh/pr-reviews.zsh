@@ -1,9 +1,10 @@
 # pr-reviews: show reviews and comments for a specific PR
 
 pr-reviews() {
-    if [[ "$1" == "-h" || "$1" == "--help" || -z "$1" ]]; then
-        echo "Usage: pr-reviews <number>"
+    if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+        echo "Usage: pr-reviews [number]"
         echo "  Shows reviews, inline review threads, and conversation comments for a PR."
+        echo "  If no number given, detects PR from current jj bookmark or git branch."
         echo "  Resolved threads are hidden by default. Use -a to show all."
         return 0
     fi
@@ -22,12 +23,33 @@ pr-reviews() {
         show_all=1
         shift
     fi
-    # Support: pr-reviews 123 -a
     if [[ "$2" == "-a" || "$2" == "--all" ]]; then
         show_all=1
     fi
 
     local pr_number="${1#\#}"
+
+    # Auto-detect PR from jj bookmark or git branch
+    if [[ -z "$pr_number" ]]; then
+        local branch=""
+        if [[ -d .jj ]]; then
+            # Closest tracked (pushed) bookmark in the current stack
+            branch="$(jj log -r 'heads(::@ & tracked_remote_bookmarks())' \
+                --no-graph -T 'bookmarks.join("\n")' --limit 1 2>/dev/null | head -1)"
+        fi
+        if [[ -z "$branch" ]]; then
+            branch="$(git symbolic-ref --short HEAD 2>/dev/null)"
+        fi
+        if [[ -z "$branch" ]]; then
+            echo "pr-reviews: no PR number given and could not detect branch" >&2
+            return 1
+        fi
+        pr_number="$(_gh pr list --head "$branch" --json number --jq '.[0].number' 2>/dev/null)"
+        if [[ -z "$pr_number" ]]; then
+            echo "pr-reviews: no open PR found for branch '$branch'" >&2
+            return 1
+        fi
+    fi
 
     # Fetch PR metadata, reviews, and comments in one call
     local json
@@ -74,16 +96,16 @@ pr-reviews() {
         fi
     }
 
-    # Helper: decode base64 body, print up to max_lines with given indent
+    # Helper: decode base64 body, print with given indent
     _pr_reviews_body() {
-        local encoded="$1" max_lines="${2:-3}" indent="${3:-    }"
+        local encoded="$1" indent="${2:-    }"
         if [[ -z "$encoded" || "$encoded" == "IA==" || "$encoded" == "Cg==" ]]; then
             return
         fi
         local decoded
         decoded="$(printf '%s' "$encoded" | base64 -d 2>/dev/null)"
         if [[ -n "$decoded" ]]; then
-            printf '%s\n' "$decoded" | head -"$max_lines" | while IFS= read -r line; do
+            printf '%s\n' "$decoded" | while IFS= read -r line; do
                 printf "%s%s\n" "$indent" "$line"
             done
         fi
@@ -126,7 +148,7 @@ pr-reviews() {
             esac
             _age="$(_pr_reviews_age "$ts")"
             printf "  ${_color}%s %-20s${reset} ${dim}%s${reset} %s\n" "$_icon" "$review_state" "$_age" "$author"
-            _pr_reviews_body "$body" 3
+            _pr_reviews_body "$body"
         done
         echo ""
     fi
@@ -147,7 +169,7 @@ pr-reviews() {
         ' | while IFS=$'\t' read -r ts author body; do
             _age="$(_pr_reviews_age "$ts")"
             printf "  ${dim}%s${reset} ${blue}%s${reset}\n" "$_age" "$author"
-            _pr_reviews_body "$body" 3
+            _pr_reviews_body "$body"
         done
         echo ""
     fi
@@ -243,15 +265,15 @@ pr-reviews() {
                                 _markers="${_markers} ${dim}(outdated)${reset}"
                             fi
                             printf "\n  ${dim}%-5s${reset} ${blue}%s${reset} ${dim}@ %s${reset}%b\n" "$_age" "$author" "$loc_or_body" "$_markers"
-                            _pr_reviews_body "$rest1" 2 "        "
+                            _pr_reviews_body "$rest1" "        "
                         else
                             _connector="├─"
                             [[ "$kind" == "E" ]] && _connector="└─"
                             printf "        ${dim}%s${reset} ${dim}%-5s${reset} ${blue}%s${reset}\n" "$_connector" "$_age" "$author"
                             if [[ "$kind" == "E" ]]; then
-                                _pr_reviews_body "$loc_or_body" 2 "           "
+                                _pr_reviews_body "$loc_or_body" "           "
                             else
-                                _pr_reviews_body "$loc_or_body" 2 "        │  "
+                                _pr_reviews_body "$loc_or_body" "        │  "
                             fi
                         fi
                     done

@@ -51,12 +51,12 @@ pr-status() {
     # Note: avoid != in jq script — zsh BANG_HIST mangles ! inside strings
     jq_script=$(cat <<'JQEOF'
 def classify:
-    if .isDraft then "draft"
-    elif (.statusCheckRollup // [] | any(
+    if (.statusCheckRollup // [] | any(
         (.conclusion // "" | ascii_downcase) == "failure"
         or (.state // "" | ascii_downcase) == "failure"
         or (.state // "" | ascii_downcase) == "error"
     )) then "ci-failing"
+    elif .isDraft then "draft"
     elif (.statusCheckRollup // [] | any(
         (.__typename == "CheckRun" and ((.status // "" | ascii_downcase) == "completed" | not))
         or (.__typename == "StatusContext" and (.state // "" | ascii_downcase) == "pending")
