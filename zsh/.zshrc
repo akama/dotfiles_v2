@@ -128,6 +128,11 @@ if [ -f ~/.zsh/pr-reviews.zsh ]; then
     source ~/.zsh/pr-reviews.zsh
 fi
 
+# Lima VM management
+if [ -f ~/.zsh/lima-vms.zsh ]; then
+    source ~/.zsh/lima-vms.zsh
+fi
+
 # Local overrides
 if [ -f ~/.zshrc_local ]; then
     source ~/.zshrc_local

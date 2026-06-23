@@ -1,0 +1,47 @@
+# Base development VM template for Lima
+# Usage: vm-new <name> (or limactl create --name <name> base.yaml)
+
+vmType: "vz"
+rosetta:
+  enabled: true
+  binfmt: true
+
+images:
+  - location: "https://cloud-images.ubuntu.com/releases/24.04/release/ubuntu-24.04-server-cloudimg-arm64.img"
+    arch: "aarch64"
+  - location: "https://cloud-images.ubuntu.com/releases/24.04/release/ubuntu-24.04-server-cloudimg-amd64.img"
+    arch: "x86_64"
+
+cpus: 4
+memory: "8GiB"
+disk: "20GiB"
+
+mountType: "virtiofs"
+mounts: []
+
+containerd:
+  system: false
+  user: false
+
+user:
+  shell: "/usr/bin/zsh"
+
+ssh:
+  forwardAgent: true
+
+provision:
+  - mode: system
+    script: |
+      #!/bin/bash
+      set -eux
+      export DEBIAN_FRONTEND=noninteractive
+      apt-get update
+      apt-get install -y \
+        zsh sqlite3 tmux vim git tar make fzf age jq \
+        curl ca-certificates build-essential
+
+      # Install jj from GitHub releases
+      ARCH="$(uname -m)"
+      JJ_TAG="$(curl -fsSL https://api.github.com/repos/jj-vcs/jj/releases/latest | jq -r .tag_name)"
+      curl -fsSL "https://github.com/jj-vcs/jj/releases/download/${JJ_TAG}/jj-${JJ_TAG}-${ARCH}-unknown-linux-musl.tar.gz" \
+        | tar xz -C /usr/local/bin/

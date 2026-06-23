@@ -3,7 +3,7 @@
 set -e
 
 DOTFILES_DIR="$(cd "$(dirname "$0")" && pwd)"
-SKIP_DIRS=".git"
+SKIP_DIRS=".git lima"
 DEPENDENCIES="zsh sqlite3 tmux vim git tar make fzf jj age"
 
 echo "Checking that current shell is zsh..."
